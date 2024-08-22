@@ -32,23 +32,69 @@ export class UserController {
     }
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @Get('/v1')
+  async findAll() {
+    try {
+      const data = await this.userService.findAll();
+      return {
+        success: true,
+        data,
+        message: 'User Fetched Successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      const data = await this.userService.findOne(+id);
+      return {
+        success: true,
+        data,
+        message: `User ${id}`,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      await this.userService.update(+id, updateUserDto);
+      return {
+        success: true,
+        message: 'User Updated Successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      await this.userService.remove(+id);
+      return {
+        success: true,
+        message: 'User Deleted Successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
   }
 }
