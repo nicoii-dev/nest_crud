@@ -32,7 +32,7 @@ export class UserController {
     }
   }
 
-  @Get('/v1')
+  @Get()
   async findAll() {
     try {
       const data = await this.userService.findAll();
