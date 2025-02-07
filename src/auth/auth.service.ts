@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { error } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -12,12 +13,7 @@ export class AuthService {
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    const payload = {
-      ...createUserDto,
-      password: hashedPassword,
-    };
-    return this.usersService.register(payload);
+    return this.usersService.register(createUserDto);
   }
 
   async signin(
@@ -45,6 +41,16 @@ export class AuthService {
         userData: payload,
       };
     }
-    throw new Error('Invalid credentials');
+    // customize error response
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: 'Invalid credentials',
+      },
+      HttpStatus.FORBIDDEN,
+      {
+        cause: error,
+      },
+    );
   }
 }
