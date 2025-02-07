@@ -12,8 +12,6 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  private readonly users: User[] = [];
-
   async create(createUserDto: CreateUserDto): Promise<User> {
     const userData = await this.userRepository.create(createUserDto);
     return this.userRepository.save(userData);
@@ -40,5 +38,19 @@ export class UserService {
   async remove(id: number): Promise<User> {
     const existingUser = await this.findOne(id);
     return await this.userRepository.remove(existingUser);
+  }
+
+  // for auth
+  async register(createUserDto: CreateUserDto): Promise<User> {
+    const userData = await this.userRepository.create(createUserDto);
+    return this.userRepository.save(userData);
+  }
+
+  async validateEmail(email: string): Promise<User> {
+    const userData = await this.userRepository.findOneBy({ email });
+    if (!userData) {
+      throw new HttpException('User Not Found', 404);
+    }
+    return userData;
   }
 }
