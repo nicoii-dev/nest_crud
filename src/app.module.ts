@@ -1,11 +1,11 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { APP_PIPE } from '@nestjs/core';
+import { ServicesModule } from './services/services.module';
+import { Services } from './services/entities/service.entity';
 
 @Module({
   imports: [
@@ -15,17 +15,17 @@ import { APP_PIPE } from '@nestjs/core';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'nestjs_crud',
-      entities: [User],
+      database: 'nhma_db',
+      entities: [User, Services],
       synchronize: true,
       autoLoadEntities: true,
     }),
     UserModule,
     AuthModule,
+    ServicesModule,
   ],
-  controllers: [AppController],
+
   providers: [
-    AppService,
     // for validation
     {
       provide: APP_PIPE,
